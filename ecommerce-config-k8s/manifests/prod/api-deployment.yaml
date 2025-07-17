@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+spec:
+  selector:
+    matchLabels:
+      app: api-app
+  template:
+    metadata:
+      labels:
+        app: api-app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: app-config
+        - secretRef:
+            name: db-credentials
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config
+        - name: jwt-keys-volume
+          mountPath: /etc/jwt
+          readOnly: true
+      volumes:
+      - name: config-volume
+        configMap:
+          name: app-properties
+      - name: jwt-keys-volume
+        secret:
+          secretName: jwt-keys
+          items:
+          - key: jwt-public.key
+            path: public.key
+          - key: jwt-secret
+            path: secret.txt
+          - key: jwt-issuer
+            path: issuer.txt

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-app
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        volumeMounts:
+        - name: nginx-volume
+          mountPath: /etc/nginx/conf.d
+        - name: tls-certs-public
+          mountPath: /etc/ssl/certs/
+          readOnly: true
+        - name: tls-certs-private
+          mountPath: /etc/ssl/private/
+          readOnly: true
+      volumes:
+      - name: nginx-volume
+        configMap:
+          name: nginx-config
+      - name: tls-certs-public
+        secret:
+          secretName: tls-certificates
+          items:
+          - key: tls.crt
+            path: tls.crt
+      - name: tls-certs-private
+        secret:
+          secretName: tls-certificates
+          items:
+          - key: tls.key
+            path: tls.key

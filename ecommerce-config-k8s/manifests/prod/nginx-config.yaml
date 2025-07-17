@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    server {
+        listen 443 ssl;
+        server_name ecommerce.example.com;
+
+        ssl_certificate /etc/ssl/certs/tls.crt;
+        ssl_certificate_key /etc/ssl/private/tls.key;
+
+        location / {
+            proxy_pass http://api-service:8080;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Proto https;
+        }
+
+        location /health {
+            return 200 "OK";
+            add_header Content-Type text/plain;
+        }
+
+        location /api/v2/ {
+            proxy_pass http://api-v2-service:8080;
+            proxy_set_header Host $host;
+        }
+    }
