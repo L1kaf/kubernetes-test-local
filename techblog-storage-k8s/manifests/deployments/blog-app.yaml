@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blog-app
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        env:
+        - name: UPLOAD_PATH
+          value: "/var/www/uploads"
+        volumeMounts:
+        - name: nginx-cache
+          mountPath: /tmp/cache
+        - name: nginx-log
+          mountPath: /var/log/app
+        - name: site
+          mountPath: /var/www/uploads
+      volumes:
+      - name: nginx-cache
+        emptyDir: {}
+      - name: nginx-log
+        hostPath:
+          path: /var/log/techblog
+          type: Directory
+      - name: site
+        persistentVolumeClaim:
+          claimName: uploads-pvc

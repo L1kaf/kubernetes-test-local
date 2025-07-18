@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backup-tool
+spec:
+  selector:
+    matchLabels:
+      app: backup
+  template:
+    metadata:
+      labels:
+        app: backup
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ["sleep", "3600"]
+        volumeMounts:
+        - name: blog-data
+          mountPath: /backup/blog-data
+          readOnly: true
+        - name: uploads-data
+          mountPath: /backup/uploads
+          readOnly: true
+      volumes:
+      - name: blog-data
+        persistentVolumeClaim:
+          claimName: blog-data-pvc
+          readOnly: true
+      - name: uploads-data
+        persistentVolumeClaim:
+          claimName: uploads-pvc
+          readOnly: true
