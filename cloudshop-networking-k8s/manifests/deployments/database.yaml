@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+spec:
+  selector:
+    matchLabels:
+      app: database
+      tier: data
+  template:
+    metadata:
+      labels:
+        app: database
+        tier: data
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:13-alpine
+        env:
+        - name: POSTGRES_DB
+          value: "cloudshop"
+        - name: POSTGRES_USER
+          value: "shopuser"
+        - name: POSTGRES_PASSWORD
+          value: "secretpassword"
+        ports:
+        - containerPort: 5432

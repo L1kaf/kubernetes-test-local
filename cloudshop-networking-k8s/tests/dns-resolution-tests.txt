@@ -1,0 +1,53 @@
+Для cloudshop
+~ # nslookup frontend-service
+;; Got recursion not available from 10.96.0.10
+Server:         10.96.0.10
+Address:        10.96.0.10#53
+
+Name:   frontend-service.cloudshop.svc.cluster.local
+Address: 10.110.64.76
+;; Got recursion not available from 10.96.0.10
+
+~ # nslookup user-service.cloudshop.svc.cluster.local
+;; Got recursion not available from 10.96.0.10
+;; Got recursion not available from 10.96.0.10
+;; Got recursion not available from 10.96.0.10
+;; Got recursion not available from 10.96.0.10
+Server:         10.96.0.10
+Address:        10.96.0.10#53
+
+Name:   user-service.cloudshop.svc.cluster.local
+Address: 10.103.53.122
+;; Got recursion not available from 10.96.0.10
+
+~ # nslookup payment-service.cloudshop-secure.svc.cluster.local:3004
+;; Got recursion not available from 10.96.0.10
+;; Got recursion not available from 10.96.0.10
+;; Got recursion not available from 10.96.0.10
+Server:         10.96.0.10
+Address:        10.96.0.10#53
+
+
+~ # nslookup database-service.cloudshop-secure.svc.cluster.local:5432
+;; Got recursion not available from 10.96.0.10
+;; Got recursion not available from 10.96.0.10
+;; Got recursion not available from 10.96.0.10
+Server:         10.96.0.10
+Address:        10.96.0.10#53
+
+Для cloudshop-secure
+~ # nslookup payment-service
+;; Got recursion not available from 10.96.0.10
+Server:         10.96.0.10
+Address:        10.96.0.10#53
+
+Name:   payment-service.cloudshop-secure.svc.cluster.local
+Address: 10.110.210.60
+;; Got recursion not available from 10.96.0.10
+
+~ # nslookup database-service
+;; Got recursion not available from 10.96.0.10
+;; Got recursion not available from 10.96.0.10
+;; Got recursion not available from 10.96.0.10
+Server:         10.96.0.10
+Address:        10.96.0.10#53

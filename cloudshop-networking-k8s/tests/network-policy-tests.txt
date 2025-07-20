@@ -1,0 +1,25 @@
+likaf@host:~/kubernetes-test/cloudshop-networking-k8s/manifests$ kubectl exec -it network-debug -n cloudshop -- sh
+~ # curl -v http://database-service.cloudshop-secure.svc.cluster.local:5432
+* Host database-service.cloudshop-secure.svc.cluster.local:5432 was resolved.
+* IPv6: (none)
+* IPv4: 10.98.222.32
+*   Trying 10.98.222.32:5432...
+* Connected to database-service.cloudshop-secure.svc.cluster.local (10.98.222.32) port 5432
+* using HTTP/1.x
+> GET / HTTP/1.1
+> Host: database-service.cloudshop-secure.svc.cluster.local:5432
+> User-Agent: curl/8.14.1
+> Accept: */*
+>
+* Request completely sent off
+* Empty reply from server
+* shutting down connection #0
+curl: (52) Empty reply from server
+
+
+kubectl exec -it order-service-5765df65cc-dgcfh -- sh
+/usr/local/apache2 # nc -zv payment-service.cloudshop-secure 3004
+/usr/local/apache2 # nc -zv payment-service.cloudshop-secure 3003
+nc: payment-service.cloudshop-secure (10.110.210.60:3003): Network unreachable
+/usr/local/apache2 # nc -zv payment-service.cloudshop-secure 3006
+nc: payment-service.cloudshop-secure (10.110.210.60:3006): Network unreachable
