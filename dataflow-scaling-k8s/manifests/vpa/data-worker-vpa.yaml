@@ -1,0 +1,21 @@
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: data-worker-vpa
+spec:
+  targetRef:
+    apiVersion: "apps/v1"
+    kind: Deployment
+    name: data-worker
+  updatePolicy:
+    updateMode: "Off"
+  resourcePolicy:
+    containerPolicies:
+    - containerName: "*"
+      controlledResources: ["cpu", "memory"]
+      minAllowed:
+        cpu: "50m"
+        memory: "64Mi"
+      maxAllowed:
+        cpu: "2"
+        memory: "4Gi"

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: custom-metrics-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: custom-metrics-app
+  template:
+    metadata:
+      labels:
+        app: custom-metrics-app
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+    spec:
+      initContainers:
+      - name: init-metrics
+        image: busybox
+        command: ['sh', '-c', 'echo "http_requests 0" > /usr/share/nginx/html/metrics']
+        volumeMounts:
+        - name: metrics-volume
+          mountPath: /usr/share/nginx/html
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: metrics-volume
+          mountPath: /usr/share/nginx/html
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "while true; do sleep 5; echo 'http_requests $((RANDOM%100))' > /usr/share/nginx/html/metrics; done"]
+      volumes:
+      - name: metrics-volume
+        emptyDir: {}

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-worker
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: data-worker
+        tier: backend
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ["sh", "-c", "while true; do echo 'Processing data...'; sleep 10; done"]
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
