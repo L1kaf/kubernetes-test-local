@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: health-report
+  labels:
+    name: health-report
+    component: monitoring
+    tier: batch
+spec:
+  schedule: "*/15 * * * *"
+  concurrencyPolicy: Allow
+  suspend: false
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: health-check
+            image: curlimages/curl
+            command: ["sh", "-c", "echo 'Generating health report...'; curl -s http://api-server-service:8080/health || echo 'API unhealthy'; echo 'Report generated'"]
+          restartPolicy: OnFailure

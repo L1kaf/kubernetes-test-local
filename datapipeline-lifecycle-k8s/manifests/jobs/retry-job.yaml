@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: retry-job
+spec:
+  backoffLimit: 5
+  template:
+    spec:
+      containers:
+      - name: retry-container
+        image: busybox
+        command: ["sh", "-c", "if [ $RANDOM -lt 16384 ]; then echo 'Success'; else echo 'Failure'; exit 1; fi"]
+      restartPolicy: Never

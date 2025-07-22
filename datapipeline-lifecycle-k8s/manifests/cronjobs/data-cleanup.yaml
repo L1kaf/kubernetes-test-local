@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: data-cleanup
+  labels:
+    name: data-cleanup
+    component: maintenance
+    tier: batch
+spec:
+  schedule: "0 1 * * 0"
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cleanup
+            image: busybox
+            command: ["sh", "-c", "echo 'Starting cleanup...'; echo 'Removing temporary files older than 7 days'; sleep 30; echo 'Cleanup completed. Freed 2.5GB'"]
+          restartPolicy: OnFailure

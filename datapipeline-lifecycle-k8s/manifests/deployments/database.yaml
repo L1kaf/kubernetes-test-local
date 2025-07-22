@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+  labels:
+    name: database
+    version: v13.0
+    component: database
+    tier: database
+    data-sensitivity: confidential
+    backup-policy: daily
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: database
+      component: database
+  template:
+    metadata:
+      labels:
+        name: database
+        version: v13.0
+        component: database
+        tier: database
+        data-sensitivity: confidential
+        backup-policy: daily
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:13-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: datapipeline
+        - name: POSTGRES_USER
+          value: dbuser
+        - name: POSTGRES_PASSWORD
+          value: dbpass123
+        readinessProbe:
+          exec:
+            command: ["pg_isready", "-U", "dbuser", "-d", "datapipeline"]
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          exec:
+            command: ["pg_isready", "-U", "dbuser", "-d", "datapipeline"]
+          initialDelaySeconds: 60
+          periodSeconds: 30

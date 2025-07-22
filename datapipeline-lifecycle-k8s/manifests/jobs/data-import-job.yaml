@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: data-import-job
+  labels:
+    name: data-import
+    component: batch
+    tier: batch
+    data-sensitivity: internal
+  annotations:
+    job.kubernetes.io/description: "Import customer data from external source"
+spec:
+  completions: 1
+  template:
+    spec:
+      containers:
+      - name: importer
+        image: busybox
+        command: ["sh", "-c", "echo 'Starting data import...'; sleep 60; echo 'Data import completed'; echo 'Processed 10000 records'"]
+      restartPolicy: OnFailure

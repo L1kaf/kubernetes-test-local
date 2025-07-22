@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: datapipeline
+  labels:
+    environment: production
+    team: data-engineering
+    project: analytics
+  annotations:
+    created-by: devops-team
+    purpose: "data processing pipeline"
+    cost-center: engineering

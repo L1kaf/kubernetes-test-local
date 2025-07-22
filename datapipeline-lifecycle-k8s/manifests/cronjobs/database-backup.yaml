@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: database-backup
+  labels:
+    name: database-backup
+    component: maintenance
+    tier: batch
+    backup-policy: daily
+  annotations:
+    cronjob.kubernetes.io/description: "Daily database backup"
+spec:
+  schedule: "0 2 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: postgres-backup
+            image: postgres:13-alpine
+            command: ["sh", "-c", "echo 'Starting backup...'; pg_dump -h database-service -U dbuser datapipeline > /backup/backup-$(date +%Y%m%d).sql; echo 'Backup completed'"]
+            env:
+            - name: PGPASSWORD
+              value: "dbpass123"
+          restartPolicy: OnFailure

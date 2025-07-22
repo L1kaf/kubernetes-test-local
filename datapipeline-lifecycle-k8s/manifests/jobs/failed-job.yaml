@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: failed-job
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      containers:
+      - name: failed-task
+        image: busybox
+        command: ["sh", "-c", "echo 'Starting job...'; sleep 10; echo 'Job failed'; exit 1"]
+      restartPolicy: OnFailure

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slow-startup-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slow-startup-app
+  template:
+    metadata:
+      labels:
+        app: slow-startup-app
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ["sh", "-c", "sleep 120; touch /tmp/ready; sleep 3600"]
+        startupProbe:
+          exec:
+            command: ["test", "-f", "/tmp/ready"]
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 15
+        readinessProbe:
+          exec:
+            command: ["test", "-f", "/tmp/ready"]
+          initialDelaySeconds: 5
+          periodSeconds: 5
